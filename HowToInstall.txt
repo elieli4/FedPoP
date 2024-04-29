@@ -1,6 +1,5 @@
 First install flower: pip install flwr
-If needed, git clone flower: git clone https://github.com/adap/flower.git
-Go to secure aggregation example directory: cd flower/examples/app-secure-aggregation
+If needed, git clone this repo: git clone https://github.com/elieli4/FedPoP.git 
 
 Install roast for threshold signatures: pip install git+https://github.com/nicovank/roast.git
 
