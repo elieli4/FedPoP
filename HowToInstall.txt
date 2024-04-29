@@ -1,5 +1,5 @@
 First install flower: pip install flwr
-If needed, git clone this repo: git clone https://github.com/elieli4/FedPoP.git 
+git clone this repo: git clone https://github.com/elieli4/FedPoP.git 
 
 Install roast for threshold signatures: pip install git+https://github.com/nicovank/roast.git
 
