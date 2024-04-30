@@ -1,9 +1,11 @@
-from flwr.common import Context
+from flwr.common import Context, parameters_to_ndarrays
 from flwr.server import Driver, LegacyContext, ServerApp, ServerConfig
 from flwr.server.strategy import FedAvg
 from flwr.server.workflow import DefaultWorkflow, SecAggPlusWorkflow
 from workflow_with_log import SecAggPlusWorkflowWithLogs
-from roast import shamir
+import flwr.common.recordset_compat as compat
+import numpy
+
 # Define strategy
 strategy = FedAvg(
     fraction_fit=1.0,  # Select all available clients
@@ -27,17 +29,22 @@ def main(driver: Driver, context: Context) -> None:
 
     # Create the workflow
     workflow = DefaultWorkflow(
-        fit_workflow=SecAggPlusWorkflowWithLogs(
-            num_shares=3,
-            reconstruction_threshold=2,
-            timeout=5,
-        )
-        # # For real-world applications, use the following code instead
-        # fit_workflow=SecAggPlusWorkflow(
-        #     num_shares=<number of shares>,
-        #     reconstruction_threshold=<reconstruction threshold>,
-        # )
+        #fit_workflow=SecAggPlusWorkflowWithLogs(
+           # num_shares=3,
+          #  reconstruction_threshold=2,
+         #   timeout=5,
+        #)
+         # For real-world applications, use the following code instead
+         fit_workflow=SecAggPlusWorkflow(
+             num_shares=3,
+             reconstruction_threshold=2,
+         )
     )
 
     # Execute
     workflow(driver, context)
+    paramsrecord = context.state.parameters_records['parameters']
+    parameters = compat.parametersrecord_to_parameters(paramsrecord, True)
+    ndarrays = parameters_to_ndarrays(parameters)
+    print(ndarrays[0])
+    numpy.savetxt("result.txt", ndarrays[0])
