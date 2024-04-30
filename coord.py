@@ -18,20 +18,9 @@ from roast.roast import share_val, verify
 from roast.transport import send_obj, recv_obj
 
 from roast import fastec
-from roast.coordinator import *
+from coordSplitSetup import *
 
 #setup
-
-
-# run the secure aggregation
-print("Start Sec Agg")
-subprocess.call(['sh', './run.sh'])
-print("End Sec Agg")
-
-
-
-#make t signature
-
 logging.basicConfig(level=logging.INFO)
 
 if len(sys.argv) != 7:
@@ -45,7 +34,7 @@ n = int(sys.argv[4])
 m = int(sys.argv[5])
 attacker_level = AttackerLevel(int(sys.argv[6]))
 
-msg = b""
+msg = numpy.genfromtxt('result.txt')
 i_to_addr = {i + 1: (host, start_port + i) for i in range(n)}
  # This is insecure; in practice we'd use DKG, but since
     # key generation is not the focus of the ROAST protocol, we will
@@ -65,5 +54,18 @@ coordinator.setup(i_to_addr)
 
 model = CoordinatorModel(X, i_to_X, t, n, msg)
 attacker_strategy = AttackerStrategy(attacker_level, n, m)
+coordinator.prerun(i_to_sk, model, attacker_strategy)
+print("did key share")
+
+
+# run the secure aggregation
+print("Start Sec Agg")
+subprocess.call(['sh', './run.sh'])
+print("End Sec Agg")
+
+
+
+#make t signature
+
 elapsed, send_count, recv_count, sid = coordinator.run(i_to_sk, model, attacker_strategy)
 print(t, n, m, attacker_level, elapsed, send_count, recv_count, sid, sep=',')
