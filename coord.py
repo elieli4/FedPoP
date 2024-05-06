@@ -44,6 +44,12 @@ sk = 1 + secrets.randbelow(fastec.n - 1)
 i_to_sk = split_secret(sk, t, n)
 
 X = sk * fastec.G
+#write X to file (verification key so that service provider can access it.)
+file1 = open("vk.txt","w")
+file1.write(str(X))
+file1.close()
+#print(X)
+
 i_to_X = {i: sk_i * fastec.G for i, sk_i in i_to_sk.items()}
 i_to_cached_ctx = {i + 1: Queue() for i in range(n)}
 
@@ -65,6 +71,11 @@ r, alpha = pyoprf.blind(vk) #find out how to get real VK
 beta = pyoprf.evaluate(oprf_k, alpha)
 N = pyoprf.unblind(r, beta)
 y = pyoprf.finalize(vk, N)
+#print("oprf key: ", oprf_k)
+#print("beta: ", beta)
+file = open("beta.txt", "w")
+file.write(str(beta))
+file.close()
 
 
 # run the secure aggregation
