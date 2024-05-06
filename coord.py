@@ -19,6 +19,7 @@ from roast.transport import send_obj, recv_obj
 
 from roast import fastec
 from coordSplitSetup import *
+import pyoprf, pysodium
 
 #setup
 logging.basicConfig(level=logging.INFO)
@@ -33,13 +34,12 @@ t = int(sys.argv[3])
 n = int(sys.argv[4])
 m = int(sys.argv[5])
 attacker_level = AttackerLevel(int(sys.argv[6]))
-
 msg = numpy.genfromtxt('result.txt')
 i_to_addr = {i + 1: (host, start_port + i) for i in range(n)}
  # This is insecure; in practice we'd use DKG, but since
     # key generation is not the focus of the ROAST protocol, we will
     # keep the implementation simple by having the coordinator
-    # act as a centralized dealer.
+    # act as a centralized dealer
 sk = 1 + secrets.randbelow(fastec.n - 1)
 i_to_sk = split_secret(sk, t, n)
 
@@ -56,6 +56,15 @@ model = CoordinatorModel(X, i_to_X, t, n, msg)
 attacker_strategy = AttackerStrategy(attacker_level, n, m)
 coordinator.prerun(i_to_sk, model, attacker_strategy)
 print("did key share")
+
+#oprf setup
+
+vk = str(sk)
+oprf_k = pyoprf.keygen()
+r, alpha = pyoprf.blind(vk) #find out how to get real VK
+beta = pyoprf.evaluate(oprf_k, alpha)
+N = pyoprf.unblind(r, beta)
+y = pyoprf.finalize(vk, N)
 
 
 # run the secure aggregation
