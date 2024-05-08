@@ -1,15 +1,15 @@
-#import pyoprf
+import pyoprf
 from hashlib import sha1
 import numpy as np
 import socket
 
 # This is the client proving its participation to the service provider.
 
-file1 = open("beta.txt", "r")
-beta=file1.read()
+file1 = open("oprf_k.txt", "rb")
+oprf_k=file1.read()
 file1.close()
 
-file2 = open("tsig.txt", "r")
+file2 = open("sig.txt", "r")
 sig = file2.read()
 file2.close()
 
@@ -27,10 +27,19 @@ client_socket.connect((host,port))
 hs = hash_model.hexdigest()
 client_socket.send(hs.encode())
 
-resp = client_socket.recv(1024).decode()
-if resp!="continue":
-	client_socket.close()
+#get "Continue response from the server"
+#resp = client_socket.recv(1024).decode()
+#print("Message received: ", resp)
+alpha = eval(client_socket.recv(1024).decode())
+#print("test")
+#print("Message received: ", alpha)
 
-client_socket.send(beta.encode())
+#compute beta and send to verifier
+beta = pyoprf.evaluate(oprf_k, alpha)
+#print("beta: ", beta)
+client_socket.send(beta)
+#print("I sent beta")
+
+print("Finished")
 
 client_socket.close()

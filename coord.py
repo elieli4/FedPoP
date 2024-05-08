@@ -21,6 +21,7 @@ from roast import fastec
 from coordSplitSetup import *
 import pyoprf, pysodium
 
+
 #setup
 logging.basicConfig(level=logging.INFO)
 
@@ -34,7 +35,7 @@ t = int(sys.argv[3])
 n = int(sys.argv[4])
 m = int(sys.argv[5])
 attacker_level = AttackerLevel(int(sys.argv[6]))
-msg = numpy.genfromtxt('result.txt')
+msg = bytes(numpy.genfromtxt('result.txt'))
 i_to_addr = {i + 1: (host, start_port + i) for i in range(n)}
  # This is insecure; in practice we'd use DKG, but since
     # key generation is not the focus of the ROAST protocol, we will
@@ -61,22 +62,25 @@ coordinator.setup(i_to_addr)
 model = CoordinatorModel(X, i_to_X, t, n, msg)
 attacker_strategy = AttackerStrategy(attacker_level, n, m)
 coordinator.prerun(i_to_sk, model, attacker_strategy)
-print("did key share")
+print("Did key share")
 
 #oprf setup
 
-vk = str(sk)
+vk = str(X)
 oprf_k = pyoprf.keygen()
-r, alpha = pyoprf.blind(vk) #find out how to get real VK
+r, alpha = pyoprf.blind(vk)
+print("r: ", r)
 beta = pyoprf.evaluate(oprf_k, alpha)
 N = pyoprf.unblind(r, beta)
 y = pyoprf.finalize(vk, N)
-#print("oprf key: ", oprf_k)
-#print("beta: ", beta)
-file = open("beta.txt", "w")
-file.write(str(beta))
+
+file = open("oprf_k.txt", "wb")
+file.write(oprf_k)
 file.close()
 
+file = open("oprf_result.txt", "wb")
+file.write(y)
+file.close()
 
 # run the secure aggregation
 print("Start Sec Agg")
@@ -85,7 +89,15 @@ print("End Sec Agg")
 
 
 
-#make t signature
-
-elapsed, send_count, recv_count, sid = coordinator.run(i_to_sk, model, attacker_strategy)
+#make threshold signature
+msg = bytes(numpy.genfromtxt('result.txt'))
+model = CoordinatorModel(X, i_to_X, t, n, msg)
+sig, ctx, elapsed, send_count, recv_count, sid = coordinator.run(i_to_sk, model, attacker_strategy)
 print(t, n, m, attacker_level, elapsed, send_count, recv_count, sid, sep=',')
+file_sig = open("sig.txt","w")
+file_sig.write(str(sig))
+file_sig.close()
+
+#file_ctx = open("ctx.txt", "w")
+#file_ctx.write(str(ctx))
+#file_ctx.close()
