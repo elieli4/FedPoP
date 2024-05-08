@@ -3,6 +3,15 @@ git clone this repo: git clone https://github.com/elieli4/FedPoP.git
 
 Install roast for threshold signatures: pip install git+https://github.com/nicovank/roast.git
 
+Insall pyoprf and dependencies: 
+	pip install pyoprf
+	sudo apt-get libsodium-dev
+	
+	git clone https://github.com/stef/liboprf.git
+	cd liboprf
+	make
+	sudo make install
+
 To test the secure aggregation through flower only, do ./run.sh
 
 To run the threshold signature and the federated learning rounds, enter the commands:
@@ -11,3 +20,7 @@ To run the threshold signature and the federated learning rounds, enter the comm
 Kill processes:
 	pkill -f part
 	pkill -f coord
+
+Run proof of participation:
+	In one terminal run: python3 verifier.py
+	In a second terminal run: python3 prover.py
