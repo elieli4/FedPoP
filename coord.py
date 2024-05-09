@@ -35,7 +35,7 @@ t = int(sys.argv[3])
 n = int(sys.argv[4])
 m = int(sys.argv[5])
 attacker_level = AttackerLevel(int(sys.argv[6]))
-msg = bytes(numpy.genfromtxt('result.txt'))
+msg = b""
 i_to_addr = {i + 1: (host, start_port + i) for i in range(n)}
  # This is insecure; in practice we'd use DKG, but since
     # key generation is not the focus of the ROAST protocol, we will
@@ -69,7 +69,7 @@ print("Did key share")
 vk = str(X)
 oprf_k = pyoprf.keygen()
 r, alpha = pyoprf.blind(vk)
-print("r: ", r)
+#print("r: ", r)
 beta = pyoprf.evaluate(oprf_k, alpha)
 N = pyoprf.unblind(r, beta)
 y = pyoprf.finalize(vk, N)
@@ -84,7 +84,8 @@ file.close()
 
 # run the secure aggregation
 print("Start Sec Agg")
-subprocess.call(['sh', './run.sh'])
+#subprocess.call(['sh', './run.sh'])
+subprocess.check_call(['./run.sh', str(n)])
 print("End Sec Agg")
 
 
@@ -98,6 +99,7 @@ file_sig = open("sig.txt","w")
 file_sig.write(str(sig))
 file_sig.close()
 
+print("Success")
 #file_ctx = open("ctx.txt", "w")
 #file_ctx.write(str(ctx))
 #file_ctx.close()

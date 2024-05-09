@@ -11,7 +11,7 @@ flower-superlink --insecure > /dev/null 2>&1 &
 sleep 2
 
 # Number of client processes to start
-N=5 # Replace with your desired value
+N=$1 # Replace with your desired value
 
 echo "Starting $N ClientApps in background..."
 
@@ -23,7 +23,8 @@ do
 done
 
 echo "Starting ServerApp..."
-flower-server-app --insecure server:app --verbose
+# flower-server-app --insecure server:app --verbose
+flower-server-app --insecure server:app
 
 echo "Clearing background processes..."
 
