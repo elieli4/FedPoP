@@ -1,9 +1,17 @@
-First install flower: pip install flwr
-git clone this repo: git clone https://github.com/elieli4/FedPoP.git 
+First install flower: 
 
-Install roast for threshold signatures: pip install git+https://github.com/nicovank/roast.git
+	pip install flwr
+
+git clone this repo: 
+
+	git clone https://github.com/elieli4/FedPoP.git 
+
+Install roast for threshold signatures: 
+
+	pip install git+https://github.com/nicovank/roast.git
 
 Insall pyoprf and dependencies: 
+	
 	pip install pyoprf
 	sudo apt-get libsodium-dev
 	
@@ -12,13 +20,22 @@ Insall pyoprf and dependencies:
 	make
 	sudo make install
 
-To test the secure aggregation through flower only, do ./run.sh
+To test the secure aggregation through flower only, do 
+
+	./run.sh
 
 To run the generate phase, enter the commands:
+	
 	./gen.sh n t m
+
 where n is the number of clients, t is the threshold for the threshold signature, and m is the number of malicious users for the threshold signature only.
 	
 
 Run proof of participation:
-	In one terminal run: python3 verifier.py
-	In a second terminal run: python3 prover.py
+In one terminal run: 
+
+	python3 verifier.py
+
+In a second terminal run: 
+
+	python3 prover.py
