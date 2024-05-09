@@ -13,10 +13,11 @@ Install roast for threshold signatures:
 Insall pyoprf and dependencies: 
 	
 	pip install pyoprf
-	sudo apt-get libsodium-dev
+ 	pip install pysodium
+	sudo apt-get install libsodium-dev
 	
 	git clone https://github.com/stef/liboprf.git
-	cd liboprf
+	cd liboprf/src/
 	make
 	sudo make install
 
