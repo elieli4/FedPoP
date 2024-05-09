@@ -23,6 +23,8 @@ import pyoprf, pysodium
 
 
 #setup
+setup_start = time.time()
+
 logging.basicConfig(level=logging.INFO)
 
 if len(sys.argv) != 7:
@@ -46,9 +48,9 @@ i_to_sk = split_secret(sk, t, n)
 
 X = sk * fastec.G
 #write X to file (verification key so that service provider can access it.)
-file1 = open("vk.txt","w")
-file1.write(str(X))
-file1.close()
+#file1 = open("vk.txt","w")
+#file1.write(str(X))
+#file1.close()
 #print(X)
 
 i_to_X = {i: sk_i * fastec.G for i, sk_i in i_to_sk.items()}
@@ -62,9 +64,13 @@ coordinator.setup(i_to_addr)
 model = CoordinatorModel(X, i_to_X, t, n, msg)
 attacker_strategy = AttackerStrategy(attacker_level, n, m)
 coordinator.prerun(i_to_sk, model, attacker_strategy)
+
+setup_end = time.time()
+
 print("Did key share")
 
 #oprf setup
+oprf_start = time.time()
 
 vk = str(X)
 oprf_k = pyoprf.keygen()
@@ -74,6 +80,8 @@ beta = pyoprf.evaluate(oprf_k, alpha)
 N = pyoprf.unblind(r, beta)
 y = pyoprf.finalize(vk, N)
 
+oprf_end = time.time()
+
 file = open("oprf_k.txt", "wb")
 file.write(oprf_k)
 file.close()
@@ -81,6 +89,10 @@ file.close()
 file = open("oprf_result.txt", "wb")
 file.write(y)
 file.close()
+
+file1 = open("vk.txt","w")
+file1.write(str(X))
+file1.close()
 
 # run the secure aggregation
 print("Start Sec Agg")
@@ -92,8 +104,14 @@ print("End Sec Agg")
 
 #make threshold signature
 msg = bytes(numpy.genfromtxt('result.txt'))
-model = CoordinatorModel(X, i_to_X, t, n, msg)
+#model = CoordinatorModel(X, i_to_X, t, n, msg)
+tsign_start = time.time()
+
+model.msg=msg
 sig, ctx, elapsed, send_count, recv_count, sid = coordinator.run(i_to_sk, model, attacker_strategy)
+
+tsign_end=time.time()
+
 print(t, n, m, attacker_level, elapsed, send_count, recv_count, sid, sep=',')
 file_sig = open("sig.txt","w")
 file_sig.write(str(sig))
@@ -103,3 +121,7 @@ print("Success")
 #file_ctx = open("ctx.txt", "w")
 #file_ctx.write(str(ctx))
 #file_ctx.close()
+file = open("generate.csv","a")
+line = str(n)+"," +str(t)+","+str(m)+","+str(setup_end-setup_start)+","+str(oprf_end-oprf_start)+","+str(tsign_end-tsign_start)+"\n"
+file.write(line)
+file.close()

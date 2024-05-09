@@ -166,7 +166,7 @@ class Coordinator:
                 ctx, sig, sid = data
                 end = time.time()
                 assert verify(ctx, sig)
-                return end - start, send_count, recv_count, sid
+                return sig, ctx, end - start, send_count, recv_count, sid
 
             else:
                 raise Exception('Unknown ActionType', action_type)
