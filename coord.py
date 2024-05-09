@@ -25,7 +25,7 @@ import pyoprf, pysodium
 #setup
 setup_start = time.time()
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.CRITICAL)
 
 if len(sys.argv) != 7:
     print(f'usage: {sys.argv[0]} <host> <start_port> <threshold> <total> <malicious> <attacker_level>')

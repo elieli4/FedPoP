@@ -12,7 +12,7 @@ from roast.participant import *
 MAX_NONCE_QUEUE = 32
 
 
-logging.basicConfig(level=logging.INFO)
+logging.basicConfig(level=logging.CRITICAL)
 
 if len(sys.argv) != 2:
     print(f'usage: {sys.argv[0]} <port>')
