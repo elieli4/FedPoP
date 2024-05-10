@@ -5,6 +5,7 @@ import socket
 from roast.roast import SessionContext, verify
 from fastecdsa.point import Point
 from fastecdsa.curve import secp256k1
+import time
 
 #This is the service provider verifying a client's (prover) participation
 
@@ -52,6 +53,7 @@ server_socket.bind((host,port))
 
 server_socket.listen(5)
 
+start = time.time()
 while True:
 	client_socket, addr = server_socket.accept()
 	print('Connected to prover')
@@ -90,4 +92,8 @@ while True:
 		break
 	client_socket.close()
 	break
-
+end = time.time()
+ln = ","+str(end-start)+"/n"
+file = open("generate.csv", "a")
+file.write(ln)
+file.close()

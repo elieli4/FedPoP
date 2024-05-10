@@ -122,6 +122,6 @@ print("Success")
 #file_ctx.write(str(ctx))
 #file_ctx.close()
 file = open("generate.csv","a")
-line = str(n)+"," +str(t)+","+str(m)+","+str(setup_end-setup_start)+","+str(oprf_end-oprf_start)+","+str(tsign_end-tsign_start)+"\n"
+line = str(n)+"," +str(t)+","+str(m)+","+str(setup_end-setup_start)+","+str(oprf_end-oprf_start)+","+str(tsign_end-tsign_start)
 file.write(line)
 file.close()
