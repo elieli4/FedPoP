@@ -5,6 +5,7 @@ from flwr.server.workflow import DefaultWorkflow, SecAggPlusWorkflow
 from workflow_with_log import SecAggPlusWorkflowWithLogs
 import flwr.common.recordset_compat as compat
 import numpy
+import time
 
 # Define strategy
 strategy = FedAvg(
@@ -16,7 +17,6 @@ strategy = FedAvg(
 
 # Flower ServerApp
 app = ServerApp()
-
 
 @app.main()
 def main(driver: Driver, context: Context) -> None:
@@ -42,9 +42,16 @@ def main(driver: Driver, context: Context) -> None:
     )
 
     # Execute
+    secagg_start = time.time()
     workflow(driver, context)
+    secagg_end = time.time()
+
     paramsrecord = context.state.parameters_records['parameters']
     parameters = compat.parametersrecord_to_parameters(paramsrecord, True)
     ndarrays = parameters_to_ndarrays(parameters)
     print(ndarrays[0])
     numpy.savetxt("result.txt", ndarrays[0])
+    file = open("generate.csv", "a")
+    tw = str(secagg_end-secagg_start) +","
+    file.write(tw)
+    file.close()
