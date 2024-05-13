@@ -93,7 +93,7 @@ while True:
 	client_socket.close()
 	break
 end = time.time()
-ln = ","+str(end-start)+"/n"
+ln = ","+str(end-start)+"\n"
 file = open("generate.csv", "a")
 file.write(ln)
 file.close()
