@@ -2,9 +2,10 @@
 
 rm generate.csv
 echo "FL,n,t,m,tsign_setup,oprf,tsign,verifier">>generate.csv
-for n in {50..50..50};
+for n in {50..500..50};
 do
-	t=$((n*1/3))
+	t=$((n*2/3))
 	./gen.sh $n $t 0
 	./prove.sh
+	sleep 1
 done
