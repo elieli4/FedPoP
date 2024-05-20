@@ -24,7 +24,7 @@ done
 
 echo "Starting ServerApp..."
 # flower-server-app --insecure server:app --verbose
-flower-server-app --insecure server:app
+flower-server-app --insecure server:app </dev/null
 
 echo "Clearing background processes..."
 

@@ -6,6 +6,7 @@ from workflow_with_log import SecAggPlusWorkflowWithLogs
 import flwr.common.recordset_compat as compat
 import numpy
 import time
+import sys
 
 # Define strategy
 strategy = FedAvg(
@@ -55,3 +56,5 @@ def main(driver: Driver, context: Context) -> None:
     tw = str(secagg_end-secagg_start) +","
     file.write(tw)
     file.close()
+    print("done")
+    sys.exit(0)

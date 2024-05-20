@@ -13,7 +13,7 @@ S=12001
 E=$((S+N-1))
 
 for i in `seq $S $E`; do python3 -m part.py $i & done
-python3 coord.py localhost 12001 $T $N $M 0
+python3 coord.py localhost 12001 $T $N $M 0 </dev/null
 
 echo "Clearing processes"
 

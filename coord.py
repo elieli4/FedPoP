@@ -97,7 +97,11 @@ file1.close()
 # run the secure aggregation
 print("Start Sec Agg")
 #subprocess.call(['sh', './run.sh'])
-subprocess.check_call(['./run.sh', str(n)])
+#subprocess.check_call(['./run.sh', str(n)])
+#subprocess.call(['bash', 'run.sh', str(n)])
+cmd = "./run.sh " + str(n)
+p = subprocess.Popen(cmd, stdout=subprocess.PIPE, stdin=subprocess.PIPE, shell=True)
+stdout, stderr = p.communicate()
 print("End Sec Agg")
 
 
