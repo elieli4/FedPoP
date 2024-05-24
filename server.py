@@ -50,7 +50,7 @@ def main(driver: Driver, context: Context) -> None:
     paramsrecord = context.state.parameters_records['parameters']
     parameters = compat.parametersrecord_to_parameters(paramsrecord, True)
     ndarrays = parameters_to_ndarrays(parameters)
-    print(ndarrays[0])
+#    print(ndarrays[0])
     numpy.savetxt("result.txt", ndarrays[0])
     file = open("generate.csv", "a")
     tw = str(secagg_end-secagg_start) +","
