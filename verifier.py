@@ -54,11 +54,15 @@ server_socket.bind((host,port))
 server_socket.listen(5)
 
 start = time.time()
+snd = 0
+rcv = 0
 while True:
 	client_socket, addr = server_socket.accept()
 	print('Connected to prover')
 #receive hash of the model
-	data = client_socket.recv(1024).decode()
+	data = client_socket.recv(1024)
+	rcv += len(data)
+	data = data.decode()
 #abort if hash of owned and received models are not equal
 	if data != hash_model.hexdigest():
 		print("No model match")
@@ -71,13 +75,14 @@ while True:
 	#client_socket.send("Continue".encode())
 	r, alpha = pyoprf.blind(str(vk))
 	client_socket.send(str(alpha).encode())
+	snd += len(str(alpha).encode())
 	#print("alpha sent: ", alpha)
 	#print("continue and alpha sent")
 
 	#receive beta from the prover
 	beta = client_socket.recv(1024)
 	#print("received message: ", beta)
-
+	rcv+= len(beta)
 	#verify signature
 	ver = verify(ctx,sig)
 	if not ver:
@@ -97,3 +102,5 @@ ln = ","+str(end-start)+"\n"
 file = open("generate.csv", "a")
 file.write(ln)
 file.close()
+print("received: ", rcv)
+print("sent: ", snd)

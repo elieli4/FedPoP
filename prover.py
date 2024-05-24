@@ -23,14 +23,18 @@ port = 12345
 
 client_socket.connect((host,port))
 
+snd=0
+rcv=0
 #send hash of the model to the verifier
 hs = hash_model.hexdigest()
 client_socket.send(hs.encode())
-
+snd+=len(hs.encode())
 #get "Continue response from the server"
 #resp = client_socket.recv(1024).decode()
 #print("Message received: ", resp)
-alpha = eval(client_socket.recv(1024).decode())
+alp = client_socket.recv(1024)
+alpha = eval(alp.decode())
+rcv+=len(alp)
 #print("test")
 #print("Message received: ", alpha)
 
@@ -39,7 +43,8 @@ beta = pyoprf.evaluate(oprf_k, alpha)
 #print("beta: ", beta)
 client_socket.send(beta)
 #print("I sent beta")
-
+snd+=len(beta)
 print("Finished")
-
+print("data sent: ", snd)
+print("data received: ", rcv)
 client_socket.close()
