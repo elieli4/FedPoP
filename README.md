@@ -23,7 +23,9 @@ Insall pyoprf and dependencies:
 
 To test the secure aggregation through flower only, do 
 
-	./run.sh
+	./run.sh n
+
+ where n is the number of clients.
 
 To run the generate phase, enter the commands:
 	
